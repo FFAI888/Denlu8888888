@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>首页 v1.05</title>
+  <title>首页 v1.06</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,7 +21,8 @@
       if (window.ethereum) {
         const accounts = await window.ethereum.request({ method: 'eth_accounts' });
         const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-        const chainName = chainId === '0x38' ? 'BN 链' : '其他链';
+        const chainIdDec = parseInt(chainId, 16);
+        const chainName = chainIdDec === 56 ? 'BN 链' : '其他链';
         document.getElementById('walletInfo').innerText = `钱包地址: ${accounts[0]} | 链: ${chainName}`;
       }
     }

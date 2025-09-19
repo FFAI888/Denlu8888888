@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>首页</h1>
+        <p id="status"></p>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div id="bottom-nav">
+        <button id="btn-home" onclick="navigatePage('home')"><span class="icon">🏠</span>首页</button>
+        <button id="btn-group" onclick="navigatePage('group')"><span class="icon">👥</span>拼团</button>
+        <button id="btn-earn" onclick="navigatePage('earn')"><span class="icon">💰</span>赚币</button>
+        <button id="btn-exchange" onclick="navigatePage('exchange')"><span class="icon">🔄</span>兑换</button>
+        <button id="btn-profile" onclick="navigatePage('profile')"><span class="icon">👤</span>我的</button>
+    </div>
+
+    <div id="content" style="margin-bottom:70px; text-align:center; padding:20px;"></div>
+
+    <script src="script.js"></script>
+    <script>
+        showHomeStatus();
+        navigatePage('home');
+    </script>
+</body>
+</html>

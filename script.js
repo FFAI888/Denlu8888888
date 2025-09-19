@@ -31,7 +31,9 @@ async function connectWallet() {
         const accounts = await ethereum.request({ method: "eth_requestAccounts" });
         const chainId = await ethereum.request({ method: "eth_chainId" });
 
-        if (chainId !== BSC_MAINNET_CHAIN_ID) {
+        // 统一转换为数字判断
+        const chainIdNum = parseInt(chainId, 16);
+        if (chainIdNum !== 56) {
             showLoginAlert("请切换到 BSC 主网");
             await forceLogout();
             return;
@@ -56,7 +58,9 @@ async function connectWallet() {
 
 // 确认关系
 function confirmRelation() {
-    const inviter = document.getElementById("confirm-inviter").value.trim();
+    const inviterInput = document.getElementById("confirm-inviter");
+    if (!inviterInput) return;
+    const inviter = inviterInput.value.trim();
     if (!inviter) {
         showLoginAlert("请输入邀请人钱包地址");
         return;
@@ -107,7 +111,7 @@ function goPage(page) {
     window.location.href = page;
 }
 
-// 事件监听
+// 页面初始化
 window.addEventListener("DOMContentLoaded", async () => {
     const wallet = localStorage.getItem("walletAddress");
     const inviter = localStorage.getItem("inviterAddress");
@@ -122,7 +126,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 
         try {
             const chainId = await ethereum.request({ method: "eth_chainId" });
-            if (chainId !== BSC_MAINNET_CHAIN_ID) {
+            const chainIdNum = parseInt(chainId, 16);
+            if (chainIdNum !== 56) {
                 showLoginAlert("请切换到 BSC 主网");
                 await forceLogout();
                 return;
@@ -142,7 +147,8 @@ window.addEventListener("DOMContentLoaded", async () => {
             forceLogout();
         });
         ethereum.on("chainChanged", (chainId) => {
-            if (chainId !== BSC_MAINNET_CHAIN_ID) {
+            const chainIdNum = parseInt(chainId, 16);
+            if (chainIdNum !== 56) {
                 showLoginAlert("请切换到 BSC 主网");
                 forceLogout();
             }

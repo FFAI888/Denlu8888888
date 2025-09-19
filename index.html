@@ -1,28 +1,27 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>登录</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>登录</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>登录</h1>
-        <button id="connectBtn">连接钱包</button>
-        <div style="margin-top:20px;">
-            <label>邀请人:</label>
-            <input type="text" id="referrerInput" placeholder="请输入邀请人钱包地址" readonly>
-        </div>
+<div class="container">
+    <h1>登录</h1>
+    <button id="connectBtn">连接钱包</button>
+    <div style="margin-top:20px;">
+        <label>邀请人:</label>
+        <input type="text" id="referrerInput" placeholder="请输入邀请人钱包地址" readonly>
     </div>
+</div>
 
-    <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function(){
-            const referrer = localStorage.getItem('referrerAddress');
-            if(referrer){
-                document.getElementById('referrerInput').value = referrer;
-            }
-        });
-    </script>
+<script src="script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    // 如果邀请人已绑定，填充输入框
+    const referrer = localStorage.getItem('referrerAddress') || '';
+    if(referrer) document.getElementById('referrerInput').value = referrer;
+});
+</script>
 </body>
 </html>

@@ -1,4 +1,5 @@
-// script.js - 版本号 1.18
+// script.js - 版本号 1.18 登录函数修正版
+
 let currentPage = 'home';
 const LOGOUT_TIMEOUT = 3600*1000;
 const pageBackgrounds = {
@@ -14,19 +15,50 @@ function isMetaMaskInstalled(){ return typeof window.ethereum!=='undefined'; }
 async function getCurrentWallet(){ if(!isMetaMaskInstalled()) return null; const accounts=await window.ethereum.request({method:'eth_accounts'}); return accounts[0]||null; }
 async function getCurrentNetwork(){ if(!isMetaMaskInstalled()) return null; return await window.ethereum.request({method:'net_version'}); }
 
-// 连接钱包（登录页面）
+// 登录页面钱包连接
 document.addEventListener('DOMContentLoaded', function(){
-    const btn = document.getElementById('connectBtn');
-    if(btn) btn.addEventListener('click', async function(){
-        if(!isMetaMaskInstalled()){ alert('请先安装 MetaMask!'); return; }
-        btn.innerText='连接中...'; btn.disabled=true;
-        try{
-            const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
-            localStorage.setItem('walletAddress', accounts[0]);
-            localStorage.setItem('loginTimestamp', Date.now());
-            window.location.href='confirm.html';
-        }catch(err){ console.error(err); alert('连接钱包失败'); btn.innerText='连接钱包'; btn.disabled=false; }
-    });
+    const connectBtn = document.getElementById('connectBtn');
+
+    if(connectBtn){
+        connectBtn.addEventListener('click', async function(){
+
+            if(typeof window.ethereum === 'undefined'){
+                alert('请先安装 MetaMask 钱包！');
+                return;
+            }
+
+            connectBtn.innerText = '连接中...';
+            connectBtn.disabled = true;
+
+            try{
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                if(!accounts || accounts.length === 0){
+                    alert('未获取到钱包地址');
+                    connectBtn.innerText='连接钱包';
+                    connectBtn.disabled=false;
+                    return;
+                }
+
+                // 保存钱包地址和登录时间
+                localStorage.setItem('walletAddress', accounts[0]);
+                localStorage.setItem('loginTimestamp', Date.now());
+
+                // 如果邀请人已绑定，填充输入框
+                const referrer = localStorage.getItem('referrerAddress') || '';
+                if(referrer) document.getElementById('referrerInput').value = referrer;
+
+                // 跳转到确认关系页面
+                window.location.href='confirm.html';
+
+            }catch(err){
+                console.error(err);
+                alert('连接钱包失败，请重试');
+                connectBtn.innerText='连接钱包';
+                connectBtn.disabled=false;
+            }
+
+        });
+    }
 });
 
 // 页面导航

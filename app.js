@@ -20,7 +20,7 @@ function showPage(page){
 }
 
 navLogin.addEventListener('click',()=>showPage('login'));
-navConfirm.addEventListener('click',()=>{ showPage('confirm'); loadWallet(); });
+navConfirm.addEventListener('click',()=>{ showPage('confirm'); updateWalletUI(); });
 
 async function connectWallet(){
     if(typeof window.ethereum==='undefined'){ alert("请先安装 MetaMask 或支持 BSC 的钱包！"); return; }
@@ -31,41 +31,49 @@ async function connectWallet(){
         if(chainId!=='0x38'){ alert("请切换到 Binance Smart Chain 网络！"); return; }
         localStorage.setItem("walletAddress",account);
         status.textContent="已连接: "+account;
-        alert("登录成功！您可以切换到确认关系页面查看。");
+        updateWalletUI();
     }catch(err){ console.error(err); alert("连接钱包失败！"); }
 }
 
 connectButton.addEventListener('click',connectWallet);
-
-if(window.ethereum){
-    window.ethereum.on('accountsChanged',(accounts)=>{
-        if(accounts.length>0){ localStorage.setItem("walletAddress",accounts[0]); status.textContent="已连接: "+accounts[0]; }
-        else{ localStorage.removeItem("walletAddress"); status.textContent="未连接"; clearWalletUI(); showPage('login'); alert("钱包已断开连接，请重新登录。"); }
-    });
-    window.ethereum.on('chainChanged',(chainId)=>{
-        if(chainId!=='0x38'){ localStorage.removeItem("walletAddress"); status.textContent="未连接"; clearWalletUI(); showPage('login'); alert("检测到非 BSC 网络，已返回登录页！"); }
-    });
-}
 
 function clearWalletUI(){
     walletInput.value=""; qrDiv.style.display='none';
     btn1.classList.add('disabled'); btn2.classList.add('disabled'); btn3.classList.add('disabled');
 }
 
-function loadWallet(){
-    const storedAddress=localStorage.getItem('walletAddress');
-    if(storedAddress){
-        ethereum.request({method:'eth_chainId'}).then(chainId=>{
-            if(chainId!=='0x38'){ clearWalletUI(); localStorage.removeItem("walletAddress"); showPage('login'); alert("检测到您当前不在 BSC 网络，已返回登录页！"); return; }
-            walletInput.value=storedAddress;
-            qrDiv.style.display='flex'; qrDiv.innerHTML=""; new QRCode(qrDiv,{text:storedAddress,width:40,height:40});
-            bigQrcode.innerHTML=""; new QRCode(bigQrcode,{text:storedAddress,width:200,height:200});
-            btn1.classList.remove('disabled'); btn2.classList.remove('disabled'); btn3.classList.remove('disabled');
-        });
-    }else{clearWalletUI();}
+// 自动检测钱包并更新二维码
+async function updateWalletUI(){
+    if(typeof ethereum === 'undefined'){ clearWalletUI(); return; }
+    const accounts = await ethereum.request({ method: 'eth_accounts' });
+    if(accounts.length === 0){ clearWalletUI(); return; }
+    const chainId = await ethereum.request({ method: 'eth_chainId' });
+    if(chainId !== '0x38'){ clearWalletUI(); alert("请切换到 BSC 网络！"); return; }
+    const address = accounts[0];
+    walletInput.value = address;
+
+    qrDiv.style.display='flex';
+    qrDiv.innerHTML='';
+    new QRCode(qrDiv,{ text: address, width: 40, height: 40 });
+
+    bigQrcode.innerHTML='';
+    new QRCode(bigQrcode,{ text: address, width: 200, height: 200 });
+
+    btn1.classList.remove('disabled');
+    btn2.classList.remove('disabled');
+    btn3.classList.remove('disabled');
+
+    localStorage.setItem('walletAddress', address);
 }
 
-window.addEventListener('load',()=>{ btn1.classList.add('show'); loadWallet(); });
+// 监听钱包变化
+if(window.ethereum){
+    window.ethereum.on('accountsChanged',()=>updateWalletUI());
+    window.ethereum.on('chainChanged',()=>updateWalletUI());
+}
+
+// 页面加载自动更新
+window.addEventListener('load', updateWalletUI);
 
 qrDiv.addEventListener('click',()=>{
     if(overlay.classList.contains('show')){ overlay.classList.remove('show'); clearTimeout(qrTimeout); }

@@ -1,4 +1,4 @@
-/* style.css - 版本号 1.24 */
+/* style.css - 版本号 1.25 */
 
 /* 通用样式 */
 html, body {
@@ -35,6 +35,18 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+/* 登录卡片 */
+.login-card {
+    background-color: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 15px auto;
+    max-width: 350px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 /* 标题 */
@@ -85,7 +97,7 @@ input[type="text"] {
     max-width: 400px;
     width: 90%;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    text-align: center; /* 卡片内容居中显示 */
+    text-align: center;
     box-sizing: border-box;
 }
 
@@ -101,7 +113,7 @@ input[type="text"] {
     width: 100%;
     display: flex;
     justify-content: space-around;
-    background-color: #ffffff; /* 新增背景颜色 */
+    background-color: #ffffff; 
     padding: 8px 0;
     box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
     border-top-left-radius: 12px;
@@ -171,7 +183,27 @@ input[type="text"] {
 @keyframes slideOutLeft { from { transform: translateX(0); opacity:1; } to { transform: translateX(-100%); opacity:0; } }
 @keyframes slideOutRight { from { transform: translateX(0); opacity:1; } to { transform: translateX(100%); opacity:0; } }
 
-/* 安全提示弹窗 */
-#alert-box { position: fixed; top: 20%; left: 50%; transform: translateX(-50%); background-color: rgba(255,100,100,0.95); color: white; padding: 20px 30px; border-radius: 12px; font-size: 1rem; z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.5s ease, transform 0.5s ease; }
-#alert-box.show { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
-#alert-box.hide { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+/* 登录页面顶部提示 */
+#login-alert {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background-color: rgba(100,100,255,0.95);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-size: 1rem;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s ease;
+}
+#login-alert.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+#login-alert.hide {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+}

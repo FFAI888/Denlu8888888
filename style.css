@@ -1,140 +1,70 @@
-/* style.css - 版本号 1.18 */
+/* style.css - 版本号 1.19 */
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* 通用样式 */
+html, body {
     margin: 0;
     padding: 0;
-    text-align: center;
+    width: 100%;
+    overflow-x: hidden; /* 防止横向滚动 */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
-    transition: background 1s ease;
+    background: #f0f2f5;
+    transition: background 0.5s ease;
 }
 
+body {
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* 容器自适应 */
+.container {
+    margin: 5% auto;
+    padding: 20px;
+    background-color: rgba(255,255,255,0.9);
+    border-radius: 15px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* 标题 */
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+/* 按钮 */
 button {
     padding: 12px 20px;
     margin: 5px;
-    font-size: 16px;
+    font-size: 1rem;
     cursor: pointer;
     border: none;
     border-radius: 8px;
     background: linear-gradient(45deg, #6a82fb, #fc5c7d);
     color: white;
     transition: all 0.3s ease;
+    width: 90%;
+    max-width: 300px;
 }
-
 button:hover {
     transform: scale(1.05);
     opacity: 0.9;
 }
 
-.container {
-    margin-top: 80px;
-    background-color: rgba(255,255,255,0.9);
-    padding: 30px;
-    border-radius: 15px;
-    display: inline-block;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    transition: all 0.5s ease;
-}
-
-h1 {
-    margin-bottom: 30px;
-}
-
-/* 页面滑动动画容器 */
-#content {
-    margin-bottom: 70px;
-    text-align: center;
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-}
-
-/* 滑动动画类 */
-.slide-in-left { animation: slideInLeft 0.4s forwards; }
-.slide-in-right { animation: slideInRight 0.4s forwards; }
-.slide-out-left { animation: slideOutLeft 0.4s forwards; }
-.slide-out-right { animation: slideOutRight 0.4s forwards; }
-
-@keyframes slideInLeft {
-    from { transform: translateX(-100%); opacity:0; }
-    to { transform: translateX(0); opacity:1; }
-}
-@keyframes slideInRight {
-    from { transform: translateX(100%); opacity:0; }
-    to { transform: translateX(0); opacity:1; }
-}
-@keyframes slideOutLeft {
-    from { transform: translateX(0); opacity:1; }
-    to { transform: translateX(-100%); opacity:0; }
-}
-@keyframes slideOutRight {
-    from { transform: translateX(0); opacity:1; }
-    to { transform: translateX(100%); opacity:0; }
-}
-
-/* 底部导航栏 */
-#bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    background-color: #ffffff;
-    padding: 8px 0;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    z-index: 100;
-}
-#bottom-nav button {
-    background: none;
-    color: #555;
-    font-size: 12px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    padding: 5px 0;
-    transition: all 0.3s ease;
-}
-#bottom-nav button span.icon {
-    font-size: 18px;
-    margin-bottom: 3px;
-}
-#bottom-nav button.active {
-    background: linear-gradient(135deg, #fc5c7d, #6a82fb);
-    color: white;
-    transform: scale(1.1);
-}
-
-/* 我的页面钱包信息样式 */
-.wallet-info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 15px 0;
-    font-size: 16px;
-    gap: 10px;
-}
-.wallet-info span.icon {
-    font-size: 20px;
-}
-
-/* 复制按钮样式 */
-.copy-btn {
-    padding: 2px 8px;
-    font-size: 12px;
-    border-radius: 5px;
-    border: 1px solid #888;
-    background-color: #f0f0f0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.copy-btn:hover {
-    background-color: #ddd;
+/* 输入框自适应 */
+input[type="text"] {
+    width: 90%;
+    max-width: 300px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    margin-top: 5px;
+    box-sizing: border-box;
 }
 
 /* 页面内容卡片 */
@@ -144,70 +74,95 @@ h1 {
     padding: 15px 20px;
     margin: 10px auto;
     max-width: 400px;
+    width: 90%;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     text-align: left;
+    box-sizing: border-box;
 }
-.card h3 { margin-top: 0; font-size: 18px; }
-.card p { font-size: 14px; margin: 5px 0; }
+
+/* 卡片标题和文字 */
+.card h3 { margin-top: 0; font-size: 1.1rem; }
+.card p { font-size: 0.9rem; margin: 5px 0; }
+
+/* 底部导航栏 */
+#bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background-color: #fff;
+    padding: 8px 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    z-index: 100;
+    box-sizing: border-box;
+}
+
+#bottom-nav button {
+    background: none;
+    color: #555;
+    font-size: 0.8rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0;
+    border-radius: 10px;
+}
+
+#bottom-nav button span.icon { font-size: 1.2rem; margin-bottom: 3px; }
+
+#bottom-nav button.active {
+    background: linear-gradient(135deg, #fc5c7d, #6a82fb);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* 钱包信息和复制按钮 */
+.wallet-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px auto;
+    font-size: 0.9rem;
+    width: 90%;
+    max-width: 400px;
+}
+
+.copy-btn {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    border: 1px solid #888;
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+.copy-btn:hover { background-color: #ddd; }
 
 /* 进度条 */
-.progress-bar {
-    width: 100%;
-    background-color: #eee;
-    border-radius: 6px;
-    overflow: hidden;
-    margin: 5px 0;
-    height: 12px;
-}
-.progress-bar-inner {
-    height: 100%;
-    background: linear-gradient(135deg, #6a82fb, #fc5c7d);
-    width: 0%;
-    transition: width 0.5s ease;
-}
+.progress-bar { width: 100%; background-color: #eee; border-radius: 6px; overflow: hidden; margin: 5px 0; height: 12px; }
+.progress-bar-inner { height: 100%; background: linear-gradient(135deg, #6a82fb, #fc5c7d); width: 0%; transition: width 0.5s ease; }
 
 /* 功能按钮 */
-.func-btn {
-    display: inline-block;
-    padding: 6px 12px;
-    margin: 5px 3px;
-    border-radius: 8px;
-    background: linear-gradient(135deg,#fc5c7d,#6a82fb);
-    color: white;
-    cursor: pointer;
-    font-size: 14px;
-    transition: transform 0.2s ease;
-}
+.func-btn { display: inline-block; padding: 6px 12px; margin: 5px 3px; border-radius: 8px; background: linear-gradient(135deg,#fc5c7d,#6a82fb); color: white; cursor: pointer; font-size: 0.9rem; transition: transform 0.2s ease; }
 .func-btn:hover{ transform: scale(1.05); }
 
-/* 卡片图标 */
-.card .icon {
-    font-size: 20px;
-    margin-right: 6px;
-}
+/* 页面滑动动画 */
+.slide-in-left { animation: slideInLeft 0.4s forwards; }
+.slide-in-right { animation: slideInRight 0.4s forwards; }
+.slide-out-left { animation: slideOutLeft 0.4s forwards; }
+.slide-out-right { animation: slideOutRight 0.4s forwards; }
+
+@keyframes slideInLeft { from { transform: translateX(-100%); opacity:0; } to { transform: translateX(0); opacity:1; } }
+@keyframes slideInRight { from { transform: translateX(100%); opacity:0; } to { transform: translateX(0); opacity:1; } }
+@keyframes slideOutLeft { from { transform: translateX(0); opacity:1; } to { transform: translateX(-100%); opacity:0; } }
+@keyframes slideOutRight { from { transform: translateX(0); opacity:1; } to { transform: translateX(100%); opacity:0; } }
 
 /* 安全提示弹窗 */
-#alert-box {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(255,100,100,0.95);
-    color: white;
-    padding: 20px 30px;
-    border-radius: 12px;
-    font-size: 16px;
-    z-index: 999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-}
-#alert-box.show {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateX(-50%) translateY(0);
-}
-#alert-box.hide {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-20px);
-}
+#alert-box { position: fixed; top: 20%; left: 50%; transform: translateX(-50%); background-color: rgba(255,100,100,0.95); color: white; padding: 20px 30px; border-radius: 12px; font-size: 1rem; z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.5s ease, transform 0.5s ease; }
+#alert-box.show { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+#alert-box.hide { opacity: 0; transform: translateX(-50%) translateY(-20px); }

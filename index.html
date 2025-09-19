@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>登录</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -18,7 +19,6 @@
 <script src="script.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
-    // 如果邀请人已绑定，填充输入框
     const referrer = localStorage.getItem('referrerAddress') || '';
     if(referrer) document.getElementById('referrerInput').value = referrer;
 });

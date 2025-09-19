@@ -1,14 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>登录页面 v1.06</title>
+  <title>登录页面 v1.07</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <h1>连接钱包登录</h1>
-    <p>请使用 MetaMask 并连接到 Binance Smart Chain (BN 链)。</p>
+    <p>请使用 MetaMask 钱包连接本网站。</p>
+    <p>注意：</p>
+    <ul>
+      <li>本应用仅支持 Binance Smart Chain (BN 链)，其他链无法使用。</li>
+      <li>请确保钱包已安装并已登录账户。</li>
+      <li>请不要直接复制链接绕过登录页面，否则无法使用功能。</li>
+      <li>连接钱包后，会自动跳转到确认关系页面进行操作。</li>
+    </ul>
     <button id="connectWalletBtn">连接钱包</button>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>

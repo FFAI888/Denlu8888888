@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>确认关系页面 v1.03</title>
+  <title>确认关系页面 v1.05</title>
   <link rel="stylesheet" href="style.css">
   <style>
     .button-container {
       position: relative;
-      width: 200px; /* 按钮宽度 */
-      height: 50px; /* 按钮高度 */
-      margin: 50px auto; /* 居中 */
+      width: 200px;
+      height: 50px;
+      margin: 50px auto;
     }
 
     .stacked-button {
@@ -31,15 +31,22 @@
       transform: scale(1.05);
     }
 
-    #btnReceive { background-color: #28a745; } /* 绿色 */
-    #btnSend    { background-color: #007bff; } /* 蓝色 */
-    #btnBind    { background-color: #ffc107; } /* 黄色 */
+    #btnReceive { background-color: #28a745; }
+    #btnSend    { background-color: #007bff; }
+    #btnBind    { background-color: #ffc107; }
+
+    .chain-warning {
+      color: red;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>确认关系</h1>
-    <p>请选择操作类型：</p>
+    <p class="chain-warning">提示：本应用仅支持 BN 链，其他链将强制返回登录页面。</p>
     <div class="button-container">
       <button id="btnReceive" class="stacked-button" onclick="confirmReceive()">确认接收</button>
       <button id="btnSend" class="stacked-button" onclick="confirmSend()">确认发送</button>
@@ -47,7 +54,9 @@
     </div>
   </div>
 
+  <script src="script.js"></script>
   <script>
+    // 保留原有按钮点击逻辑
     function confirmReceive() {
       alert('已确认接收！');
       window.location.href = 'home.html';
@@ -62,6 +71,9 @@
       alert('已确认绑定！');
       window.location.href = 'home.html';
     }
+
+    // 页面加载时调用检测
+    initPageCheck();
   </script>
 </body>
 </html>

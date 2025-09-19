@@ -1,33 +1,20 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>确认关系</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>确认关系页面 v1.00</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-    <h1>确认绑定邀请人</h1>
-    <p>请确认邀请人关系后，才能进入首页</p>
-    <button id="confirmBtn">确认绑定</button>
-</div>
-
-<script src="script.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-    const confirmBtn = document.getElementById('confirmBtn');
-    confirmBtn.addEventListener('click', function(){
-        const wallet = localStorage.getItem('walletAddress') || '';
-        const referrer = wallet; // 假设逻辑标识邀请人
-        if(wallet){
-            localStorage.setItem('referrerAddress', referrer);
-            window.location.href='home.html';
-        } else {
-            alert('请先连接钱包');
-        }
-    });
-});
-</script>
+  <div class="container">
+    <h1>确认关系</h1>
+    <p>是否确认你的关系？</p>
+    <button onclick="confirmRelation()">确认</button>
+  </div>
+  <script>
+    function confirmRelation() {
+      window.location.href = 'home.html';
+    }
+  </script>
 </body>
 </html>

@@ -1,60 +1,46 @@
-const connectWalletBtn = document.getElementById('connectWalletBtn');
-const logoutBtn = document.getElementById('logoutBtn');
-const switchNetworkBtn = document.getElementById('switchNetworkBtn');
-const walletAddress = document.getElementById('walletAddress');
-const networkStatus = document.getElementById('networkStatus');
+// script.js - 版本号 1.11
 
-const BSC_MAINNET_CHAIN_ID = '0x38';
+const LOGOUT_TIMEOUT = 3600 * 1000;
 
-// 页面加载
-window.onload = async () => {
-    await updateStatus();
-}
+// 安全及钱包功能
+function isMetaMaskInstalled(){ return typeof window.ethereum !== 'undefined'; }
+async function getCurrentWallet(){ if(!isMetaMaskInstalled()) return null; const accounts = await window.ethereum.request({ method:'eth_accounts' }); return accounts[0] || null; }
+async function getCurrentNetwork(){ if(!isMetaMaskInstalled()) return null; return await window.ethereum.request({ method:'eth_chainId' }); }
+function forceLogout(){ localStorage.removeItem('walletAddress'); localStorage.removeItem('loginTimestamp'); localStorage.removeItem('networkId'); alert('检测到不安全操作，已退出登录，请重新连接钱包'); window.location.href='index.html'; }
+async function connectWallet(){ if(!isMetaMaskInstalled()){ alert('请先安装 MetaMask!'); return; } const btn = document.querySelector('button'); btn.innerText='连接中...'; btn.disabled=true; try{ const accounts = await window.ethereum.request({method:'eth_requestAccounts'}); localStorage.setItem('walletAddress',accounts[0]); localStorage.setItem('loginTimestamp',Date.now()); window.location.href='confirm.html'; }catch(err){console.error(err);alert('连接钱包失败'); btn.innerText='连接钱包'; btn.disabled=false;} }
+function displayWalletAddress(){ checkSecurity(); const walletAddress = localStorage.getItem('walletAddress'); if(!walletAddress){ alert('未找到钱包地址'); window.location.href='index.html'; return;} document.getElementById('wallet-address').innerText = walletAddress; }
+function showHomeStatus(){ checkSecurity(); const walletAddress = localStorage.getItem('walletAddress'); const statusEl = document.getElementById('status'); if(!walletAddress){ statusEl.innerText='未登录'; statusEl.style.color='red'; } else{ statusEl.innerText='已登录钱包: '+walletAddress; statusEl.style.color='green'; } }
+function autoRedirectIfLoggedIn(targetPage){ checkSecurity(); const walletAddress = localStorage.getItem('walletAddress'); if(walletAddress && targetPage!=='home'){ window.location.href='home.html'; } }
+async function checkSecurity(){ const walletAddress = localStorage.getItem('walletAddress'); if(!walletAddress) return; const loginTimestamp=parseInt(localStorage.getItem('loginTimestamp')||'0'); if(Date.now()-loginTimestamp>LOGOUT_TIMEOUT){ forceLogout(); return;} const currentWallet=await getCurrentWallet(); if(currentWallet!==walletAddress){ forceLogout(); return;} const currentNetwork=await getCurrentNetwork(); const storedNetwork = localStorage.getItem('networkId'); if(storedNetwork && storedNetwork!==currentNetwork){ forceLogout(); return;} else{ localStorage.setItem('networkId',currentNetwork); } }
+document.addEventListener('copy',()=>{forceLogout();});
+document.addEventListener('mousemove',updateActivity);
+document.addEventListener('keydown',updateActivity);
+function updateActivity(){ localStorage.setItem('loginTimestamp',Date.now()); }
 
-async function updateStatus() {
-    if (typeof window.ethereum !== 'undefined') {
-        const chainId = await ethereum.request({ method: 'eth_chainId' });
-        const accounts = await ethereum.request({ method: 'eth_accounts' });
+// 页面背景颜色映射
+const pageBackgrounds = {
+    home: 'linear-gradient(135deg, #f0f2f5, #cde0f7)',
+    group: 'linear-gradient(135deg, #ffd194, #70e1f5)',
+    earn: 'linear-gradient(135deg, #a8ff78, #78ffd6)',
+    exchange: 'linear-gradient(135deg, #fbc2eb, #a6c1ee)',
+    profile: 'linear-gradient(135deg, #f6d365, #fda085)'
+};
 
-        networkStatus.textContent = chainId === BSC_MAINNET_CHAIN_ID ? '网络状态：✅ BSC 主网' : '网络状态：❌ 非BSC主网';
-        switchNetworkBtn.style.display = chainId === BSC_MAINNET_CHAIN_ID ? 'none' : 'inline-block';
+// 导航+页面切换+背景渐变
+function navigatePage(page){
+    const contentEl = document.getElementById('content');
+    document.querySelectorAll('#bottom-nav button').forEach(btn=>btn.classList.remove('active'));
+    document.body.style.background = pageBackgrounds[page] || '#f0f2f5';
 
-        walletAddress.textContent = accounts.length > 0 ? `钱包状态：✅ ${shortenAddress(accounts[0])}` : '钱包状态：❌ 未连接';
-    } else {
-        networkStatus.textContent = '网络状态：❌ 未安装钱包';
-        walletAddress.textContent = '钱包状态：❌ 未连接';
+    if(page==='home'){ document.getElementById('btn-home').classList.add('active'); contentEl.innerHTML='<h2>首页内容</h2><p>欢迎来到首页！</p>'; }
+    else if(page==='group'){ document.getElementById('btn-group').classList.add('active'); contentEl.innerHTML='<h2>拼团页面</h2><p>这里是拼团功能。</p>'; }
+    else if(page==='earn'){ document.getElementById('btn-earn').classList.add('active'); contentEl.innerHTML='<h2>赚币页面</h2><p>这里可以赚币。</p>'; }
+    else if(page==='exchange'){ document.getElementById('btn-exchange').classList.add('active'); contentEl.innerHTML='<h2>兑换页面</h2><p>这里可以兑换。</p>'; }
+    else if(page==='profile'){
+        document.getElementById('btn-profile').classList.add('active');
+        const referrer = localStorage.getItem('referrerAddress');
+        contentEl.innerHTML = '<h2>我的页面</h2>'+
+                              '<p>钱包地址: '+(localStorage.getItem('walletAddress')||'未登录')+'</p>'+
+                              '<p>邀请人钱包地址: '+(referrer||'未绑定')+'</p>';
     }
-}
-
-// 连接钱包
-connectWalletBtn.addEventListener('click', async () => {
-    if (typeof window.ethereum !== 'undefined') {
-        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-        if (accounts.length > 0) walletAddress.textContent = `钱包状态：✅ ${shortenAddress(accounts[0])}`;
-        await updateStatus();
-    } else {
-        alert('请安装 MetaMask 钱包');
-    }
-});
-
-// 切换网络
-switchNetworkBtn.addEventListener('click', async () => {
-    try {
-        await ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: BSC_MAINNET_CHAIN_ID }] });
-        await updateStatus();
-    } catch {
-        alert('切换网络失败，请手动切换到 BSC 主网');
-    }
-});
-
-// 退出登录
-logoutBtn.addEventListener('click', () => {
-    walletAddress.textContent = '钱包状态：❌ 未连接';
-    logoutBtn.style.display = 'none';
-    connectWalletBtn.style.display = 'inline-block';
-    switchNetworkBtn.style.display = 'none';
-});
-
-function shortenAddress(address) {
-    return address.slice(0,6) + '...' + address.slice(-4);
 }

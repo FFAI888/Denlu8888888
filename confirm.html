@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>确认关系</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>确认绑定邀请人</h1>
+        <button onclick="confirmBinding()">确认绑定</button>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function confirmBinding(){
+            const referrer = prompt("请输入邀请人钱包地址确认绑定");
+            if(referrer){
+                localStorage.setItem('referrerAddress', referrer); // 永久绑定
+                window.location.href='home.html';
+            }else{
+                alert("必须输入邀请人钱包地址！");
+            }
+        }
+    </script>
+</body>
+</html>

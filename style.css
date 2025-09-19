@@ -1,11 +1,12 @@
-/* style.css - 版本号 1.11 */
+/* style.css - 版本号 1.18 */
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     text-align: center;
     color: #333;
-    transition: background 1s ease; /* 背景渐变动画 */
+    transition: background 1s ease;
 }
 
 button {
@@ -26,29 +27,52 @@ button:hover {
 }
 
 .container {
-    margin-top: 100px;
+    margin-top: 80px;
     background-color: rgba(255,255,255,0.9);
     padding: 30px;
     border-radius: 15px;
     display: inline-block;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    transition: all 0.5s ease; /* 页面淡入效果 */
+    transition: all 0.5s ease;
 }
 
 h1 {
     margin-bottom: 30px;
 }
 
-/* 页面内容淡入动画 */
+/* 页面滑动动画容器 */
 #content {
-    animation: fadeIn 0.5s;
-}
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    margin-bottom: 70px;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
 }
 
-/* 底部导航栏美化 - 移动端自适应+图标 */
+/* 滑动动画类 */
+.slide-in-left { animation: slideInLeft 0.4s forwards; }
+.slide-in-right { animation: slideInRight 0.4s forwards; }
+.slide-out-left { animation: slideOutLeft 0.4s forwards; }
+.slide-out-right { animation: slideOutRight 0.4s forwards; }
+
+@keyframes slideInLeft {
+    from { transform: translateX(-100%); opacity:0; }
+    to { transform: translateX(0); opacity:1; }
+}
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity:0; }
+    to { transform: translateX(0); opacity:1; }
+}
+@keyframes slideOutLeft {
+    from { transform: translateX(0); opacity:1; }
+    to { transform: translateX(-100%); opacity:0; }
+}
+@keyframes slideOutRight {
+    from { transform: translateX(0); opacity:1; }
+    to { transform: translateX(100%); opacity:0; }
+}
+
+/* 底部导航栏 */
 #bottom-nav {
     position: fixed;
     bottom: 0;
@@ -63,7 +87,6 @@ h1 {
     border-top-right-radius: 12px;
     z-index: 100;
 }
-
 #bottom-nav button {
     background: none;
     color: #555;
@@ -77,16 +100,114 @@ h1 {
     padding: 5px 0;
     transition: all 0.3s ease;
 }
-
 #bottom-nav button span.icon {
     font-size: 18px;
     margin-bottom: 3px;
 }
-
-/* 点击高亮渐变动画 */
 #bottom-nav button.active {
     background: linear-gradient(135deg, #fc5c7d, #6a82fb);
     color: white;
     transform: scale(1.1);
-    transition: all 0.4s ease;
+}
+
+/* 我的页面钱包信息样式 */
+.wallet-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0;
+    font-size: 16px;
+    gap: 10px;
+}
+.wallet-info span.icon {
+    font-size: 20px;
+}
+
+/* 复制按钮样式 */
+.copy-btn {
+    padding: 2px 8px;
+    font-size: 12px;
+    border-radius: 5px;
+    border: 1px solid #888;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.copy-btn:hover {
+    background-color: #ddd;
+}
+
+/* 页面内容卡片 */
+.card {
+    background-color: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin: 10px auto;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    text-align: left;
+}
+.card h3 { margin-top: 0; font-size: 18px; }
+.card p { font-size: 14px; margin: 5px 0; }
+
+/* 进度条 */
+.progress-bar {
+    width: 100%;
+    background-color: #eee;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 5px 0;
+    height: 12px;
+}
+.progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(135deg, #6a82fb, #fc5c7d);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+/* 功能按钮 */
+.func-btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 5px 3px;
+    border-radius: 8px;
+    background: linear-gradient(135deg,#fc5c7d,#6a82fb);
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 0.2s ease;
+}
+.func-btn:hover{ transform: scale(1.05); }
+
+/* 卡片图标 */
+.card .icon {
+    font-size: 20px;
+    margin-right: 6px;
+}
+
+/* 安全提示弹窗 */
+#alert-box {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255,100,100,0.95);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 12px;
+    font-size: 16px;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+#alert-box.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+#alert-box.hide {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
 }

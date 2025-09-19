@@ -1,4 +1,4 @@
-/* 背景美化 */
+/* 背景美化：蓝色水波纹 */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -8,21 +8,30 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #0d47a1; /* 深蓝色背景 */
 }
 
 .background {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #f0b90b, #f3ba2f);
-    filter: blur(40px);
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 10%, transparent 10%) repeat;
+    background-size: 40px 40px; /* 水波纹大小 */
+    animation: ripple 15s linear infinite; /* 缓慢移动水波纹 */
     z-index: -1;
+}
+
+@keyframes ripple {
+    0% { transform: translate(0,0); }
+    100% { transform: translate(40px,40px); }
 }
 
 /* 登录卡片 */
 .container {
     background: rgba(255, 255, 255, 0.95);
-    padding: 60px 80px; /* 增大卡片四周间距 */
+    padding: 60px 80px;
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 20px 50px rgba(0,0,0,0.4);
@@ -39,8 +48,9 @@ body {
 
 h1 {
     margin-bottom: 25px;
-    color: #333;
+    color: #fff; /* 白色字体与深蓝背景对比 */
     font-size: 28px;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
 
 .status {
@@ -49,7 +59,7 @@ h1 {
 
 #walletAddress, #networkStatus {
     font-weight: bold;
-    color: #555;
+    color: #333;
     font-size: 16px;
 }
 
@@ -69,7 +79,7 @@ h1 {
 
 /* 按钮样式 */
 button {
-    padding: 14px 30px; /* 增大按钮大小 */
+    padding: 14px 30px;
     font-size: 16px;
     cursor: pointer;
     border: none;

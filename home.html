@@ -6,10 +6,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>首页</h1>
-        <p id="status"></p>
-    </div>
+    <div id="alert-box"></div>
+    <div id="content"></div>
 
     <!-- 底部导航栏 -->
     <div id="bottom-nav">
@@ -20,12 +18,9 @@
         <button id="btn-profile" onclick="navigatePage('profile')"><span class="icon">👤</span>我的</button>
     </div>
 
-    <div id="content" style="margin-bottom:70px; text-align:center; padding:20px;"></div>
-
     <script src="script.js"></script>
     <script>
-        showHomeStatus();
-        navigatePage('home');
+        navigatePage('home'); // 默认首页
     </script>
 </body>
 </html>

@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>确认关系</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>确认关系</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>确认绑定邀请人</h1>
-        <button id="confirmBtn">确认绑定</button>
-    </div>
+<div class="container">
+    <h1>确认绑定邀请人</h1>
+    <p>请确认邀请人关系后，才能进入首页</p>
+    <button id="confirmBtn">确认绑定</button>
+</div>
 
-    <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function(){
-            const btn = document.getElementById('confirmBtn');
-            btn.addEventListener('click', function(){
-                if(localStorage.getItem('referrerAddress')){
-                    alert('邀请人已绑定，不可修改！');
-                    window.location.href = 'home.html';
-                    return;
-                }
-                const referrer = prompt("请输入邀请人钱包地址进行绑定");
-                if(referrer){
-                    localStorage.setItem('referrerAddress', referrer);
-                    alert('绑定成功！');
-                    window.location.href='home.html';
-                }else{
-                    alert("必须输入邀请人钱包地址！");
-                }
-            });
-        });
-    </script>
+<script src="script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const confirmBtn = document.getElementById('confirmBtn');
+    confirmBtn.addEventListener('click', function(){
+        const wallet = localStorage.getItem('walletAddress') || '';
+        const referrer = wallet; // 假设逻辑标识邀请人
+        if(wallet){
+            localStorage.setItem('referrerAddress', referrer);
+            window.location.href='home.html';
+        } else {
+            alert('请先连接钱包');
+        }
+    });
+});
+</script>
 </body>
 </html>

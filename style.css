@@ -3,11 +3,11 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     height: 100vh;
-    overflow: hidden;
-    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .background {
@@ -21,7 +21,7 @@ body {
 
 /* 登录卡片 */
 .container {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255,255,255,0.95);
     padding: 60px 80px;
     border-radius: 20px;
     text-align: center;
@@ -29,54 +29,30 @@ body {
     max-width: 450px;
     width: 100%;
     border: 2px solid #f0b90b;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.container:hover {
-    transform: scale(1.05);
-    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
 }
 
 h1 {
     margin-bottom: 25px;
-    color: #333;
     font-size: 28px;
+    color: #333;
 }
 
-.status {
-    margin-bottom: 25px;
-}
-
-#walletAddress, #networkStatus {
+p {
     font-weight: bold;
-    color: #555;
+    margin: 10px 0;
     font-size: 16px;
+    color: #555;
 }
 
-.network-warning {
-    color: red;
-    animation: blink 1s infinite;
-}
-
-.network-ok {
-    color: green;
-}
-
-@keyframes blink {
-    0%, 50%, 100% { opacity: 1; }
-    25%, 75% { opacity: 0.3; }
-}
-
-/* 按钮样式 */
 button {
     padding: 14px 30px;
+    margin: 8px;
     font-size: 16px;
-    cursor: pointer;
     border: none;
     border-radius: 10px;
     background-color: #f0b90b;
     color: white;
-    margin: 8px;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 

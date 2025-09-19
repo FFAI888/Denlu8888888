@@ -2,22 +2,25 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BSC主网钱包登录</title>
+    <title>登录</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background"></div>
     <div class="container">
-        <h1>BSC主网钱包登录</h1>
-        <p id="walletAddress">钱包状态：❌ 未连接</p>
-        <p id="networkStatus">网络状态：❌ 未知</p>
-        <button id="connectWalletBtn">连接钱包</button>
-        <button id="switchNetworkBtn" style="display:none;">切换到BSC主网</button>
-        <button id="logoutBtn" style="display:none;">退出登录</button>
+        <h1>登录</h1>
+        <button onclick="connectWallet()">连接钱包</button>
+        <div style="margin-top:20px;">
+            <label>邀请人:</label>
+            <input type="text" id="referrerInput" placeholder="请输入邀请人钱包地址" readonly>
+        </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
     <script src="script.js"></script>
+    <script>
+        const referrer = localStorage.getItem('referrerAddress');
+        if(referrer){
+            document.getElementById('referrerInput').value = referrer;
+        }
+    </script>
 </body>
 </html>

@@ -1,46 +1,24 @@
 <!DOCTYPE html>
-<html 做多="zh-CN">
-<头>
-<元 charset="UTF-8">
-<元 名字="viewport" 内容=“width=设备宽度，初始刻度=1.0“>
-<标题>DApp 应用</标题>
-<link 相对="stylesheet" href="style.css">
-</头>
-<身体>
-
-<div 类="navbar">
-    <按钮 id="navLogin" 类="active">登录</按钮>
-    <按钮 id="navConfirm">确认关系</按钮>
-</div>
-
-<div id="pageLogin" 类=“页面活跃”>
-    <div 类="login-card">
-        <h2>登录 BSC 钱包</h2>
-        <按钮 id="connectButton">连接钱包</按钮>
-        <p id="status">未连接</p>
-    </div>
-</div>
-
-<div id="pageConfirm" 类="page">
-    <div 类="card">
-        <div 类="wallet-row">
-            <输入 类型="text" id="walletInput" 类="wallet-input" 占 位 符="钱包地址" 禁用 />
-            <div id="qrcode" 类="qrcode" 风格="显示:没有;"></div>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSC主网钱包登录系统</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>BSC主网钱包登录</h1>
+        <div class="status">
+            <p id="walletAddress">钱包状态：<span id="walletIcon">❌</span> 未连接</p>
+            <p id="networkStatus">网络状态：<span id="networkIcon">❌</span> 未知</p>
         </div>
-        <div 类="button-container" id="buttonContainer">
-            <按钮 id="btn1" 类="disabled">确认接收</按钮>
-            <按钮 id="btn2" 类="disabled">确认发送</按钮>
-            <按钮 id="btn3" 类="disabled">确认绑定</按钮>
-        </div>
+        <button id="connectWalletBtn">连接钱包</button>
+        <button id="switchNetworkBtn" style="display:none;">切换到BSC主网</button>
+        <button id="logoutBtn" style="display:none;">退出登录</button>
     </div>
-</div>
 
-<div 类="overlay" id="overlay">
-    <div 类="big-qrcode" id="bigQrcode"></div>
-</div>
-
-<!-- 本地二维码库 -->
-<脚本 来源="qrcode.min.js"></脚本>
-<脚本 来源="app.js"></脚本>
-</身体>
+    <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
+    <script src="script.js"></script>
+</body>
 </html>

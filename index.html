@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const referrer = localStorage.getItem('referrerAddress') || '';
     if(referrer) document.getElementById('referrerInput').value = referrer;
 
-    // 登录提示显示 3 秒后自动消失
+    // 登录提示显示 3 秒后自动消失（新增）
     const alertBox = document.getElementById('login-alert');
     alertBox.classList.add('show');
     setTimeout(()=>{

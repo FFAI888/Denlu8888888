@@ -14,7 +14,7 @@
 <div class="container">
     <h1>登录</h1>
 
-    <!-- 登录卡片布局 -->
+    <!-- 登录卡片 -->
     <div class="login-card">
         <p>欢迎使用平台，请连接您的钱包</p>
         <button id="connectBtn">连接钱包</button>
@@ -32,10 +32,13 @@ document.addEventListener('DOMContentLoaded', function(){
     const referrer = localStorage.getItem('referrerAddress') || '';
     if(referrer) document.getElementById('referrerInput').value = referrer;
 
-    // 登录页面提示弹出显示 3 秒
+    // 登录提示显示 3 秒后自动消失
     const alertBox = document.getElementById('login-alert');
     alertBox.classList.add('show');
-    setTimeout(()=>{ alertBox.classList.remove('show'); alertBox.classList.add('hide'); },3000);
+    setTimeout(()=>{
+        alertBox.classList.remove('show');
+        alertBox.classList.add('hide');
+    },3000);
 });
 </script>
 </body>

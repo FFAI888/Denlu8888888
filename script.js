@@ -1,4 +1,5 @@
-// script.js - 版本号 1.20 BSC 主网支持
+// script.js - 版本号 1.23 完整整合
+// 支持 BSC 主网、登录保护、邀请人绑定、底部导航、复制、超时退出、动画等
 
 let currentPage = 'home';
 const LOGOUT_TIMEOUT = 3600*1000; // 1小时超时
@@ -16,20 +17,17 @@ function isMetaMaskInstalled(){ return typeof window.ethereum!=='undefined'; }
 async function getCurrentWallet(){ if(!isMetaMaskInstalled()) return null; const accounts=await window.ethereum.request({method:'eth_accounts'}); return accounts[0]||null; }
 async function getCurrentChainId(){ if(!isMetaMaskInstalled()) return null; return await window.ethereum.request({method:'eth_chainId'}); }
 
-// 登录页面钱包连接
+// 登录页面连接钱包
 document.addEventListener('DOMContentLoaded', function(){
     const connectBtn = document.getElementById('connectBtn');
-
     if(connectBtn){
         connectBtn.addEventListener('click', async function(){
             if(!isMetaMaskInstalled()){
                 alert('请先安装 MetaMask 钱包！');
                 return;
             }
-
             connectBtn.innerText = '连接中...';
             connectBtn.disabled = true;
-
             try{
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 if(!accounts || accounts.length === 0){
@@ -61,9 +59,12 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         });
     }
+
+    // 登录保护：检查用户是否绕过登录页
+    checkLoginSecurity();
 });
 
-// 页面导航、复制、滑动、底部导航等逻辑保持不变
+// 页面导航、复制、滑动、底部导航逻辑保持不变
 function navigatePage(page){
     if(page===currentPage) return;
     const contentEl = document.getElementById('content');
@@ -129,20 +130,39 @@ function copyToClipboard(text){
     navigator.clipboard.writeText(text).then(()=>{ alert('已复制: '+text); }).catch(err=>{ alert('复制失败: '+err); });
 }
 
+// 登录保护函数：防止绕过登录页
+async function checkLoginSecurity(){
+    const walletAddress = localStorage.getItem('walletAddress');
+    const loginTimestamp = parseInt(localStorage.getItem('loginTimestamp')||'0');
+    const currentChainId = await getCurrentChainId();
+
+    if(!walletAddress){
+        forceLogout('未检测到钱包登录，请先连接钱包');
+        return false;
+    }
+
+    if(currentChainId !== BSC_CHAIN_ID){
+        forceLogout('请连接 BSC 主网，已退出登录');
+        return false;
+    }
+
+    if(Date.now() - loginTimestamp > LOGOUT_TIMEOUT){
+        forceLogout('无操作超过1小时，已退出登录');
+        return false;
+    }
+
+    const currentWallet = await getCurrentWallet();
+    if(currentWallet !== walletAddress){
+        forceLogout('检测到钱包已切换，已退出登录');
+        return false;
+    }
+
+    return true; // 登录状态有效
+}
+
 // 安全机制
 async function checkSecurity(){ 
-    const walletAddress = localStorage.getItem('walletAddress'); 
-    if(!walletAddress) return; 
-    const loginTimestamp=parseInt(localStorage.getItem('loginTimestamp')||'0'); 
-    if(Date.now()-loginTimestamp>LOGOUT_TIMEOUT){ forceLogout('无操作超过1小时，已退出登录'); return; }
-    
-    const currentWallet = await getCurrentWallet(); 
-    if(currentWallet!==walletAddress){ forceLogout('检测到钱包已切换，已退出登录'); return; }
-
-    const currentChainId = await getCurrentChainId();
-    if(currentChainId!==BSC_CHAIN_ID){ forceLogout('请连接 BSC 主网，已退出登录'); return; }
-
-    localStorage.setItem('networkId',currentChainId);
+    await checkLoginSecurity();
 }
 
 function forceLogout(msg='检测到不安全操作，已退出登录，请重新连接钱包'){

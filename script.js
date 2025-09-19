@@ -1,4 +1,4 @@
-// script.js - 版本号 1.26
+// script.js - 1.26 基于 1.23 完整保留功能
 function isMetaMaskInstalled(){ return typeof window.ethereum !== 'undefined'; }
 
 async function connectWallet(){

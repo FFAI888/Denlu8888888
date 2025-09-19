@@ -8,7 +8,7 @@
 <body>
     <div class="container">
         <h1>登录</h1>
-        <button onclick="connectWallet()">连接钱包</button>
+        <button id="connectBtn">连接钱包</button>
         <div style="margin-top:20px;">
             <label>邀请人:</label>
             <input type="text" id="referrerInput" placeholder="请输入邀请人钱包地址" readonly>
@@ -17,10 +17,12 @@
 
     <script src="script.js"></script>
     <script>
-        const referrer = localStorage.getItem('referrerAddress');
-        if(referrer){
-            document.getElementById('referrerInput').value = referrer;
-        }
+        document.addEventListener('DOMContentLoaded', function(){
+            const referrer = localStorage.getItem('referrerAddress');
+            if(referrer){
+                document.getElementById('referrerInput').value = referrer;
+            }
+        });
     </script>
 </body>
 </html>

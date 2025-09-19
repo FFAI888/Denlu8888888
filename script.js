@@ -1,6 +1,7 @@
+/* script.js v1.06 */
 // 公共 JS：钱包连接 + BN 链检测 + 防绕过登录功能
 
-const BSC_CHAIN_ID = '0x38'; // BN 链主网
+const BSC_CHAIN_ID_DEC = 56; // BN 链主网十进制
 
 // 登录页：连接钱包按钮逻辑
 const connectWalletBtn = document.getElementById('connectWalletBtn');
@@ -9,8 +10,9 @@ if (connectWalletBtn) {
     try {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+      const chainIdDec = parseInt(chainId, 16);
 
-      if (chainId !== BSC_CHAIN_ID) {
+      if (chainIdDec !== BSC_CHAIN_ID_DEC) {
         alert('请切换到 Binance Smart Chain (BN链)！');
         return;
       }
@@ -39,7 +41,9 @@ async function checkWalletAndChain() {
       }
 
       const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-      if (chainId !== BSC_CHAIN_ID) {
+      const chainIdDec = parseInt(chainId, 16);
+
+      if (chainIdDec !== BSC_CHAIN_ID_DEC) {
         alert('请切换到 Binance Smart Chain (BN链)！');
         sessionStorage.removeItem('walletConnected');
         window.location.href = 'index.html';
@@ -81,7 +85,8 @@ async function initPageCheck() {
 
   // 监听链网络变化
   window.ethereum.on('chainChanged', async (chainId) => {
-    if (chainId !== BSC_CHAIN_ID) {
+    const chainIdDec = parseInt(chainId, 16);
+    if (chainIdDec !== BSC_CHAIN_ID_DEC) {
       alert('切换的网络不是 BN 链，请重新登录！');
       sessionStorage.removeItem('walletConnected');
       window.location.href = 'index.html';

@@ -7,25 +7,21 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-    <h1>首页</h1>
-    <p>欢迎回来！</p>
-</div>
+<div id="alert-box"></div>
+<div id="content"></div>
 
-<!-- 底部导航 -->
-<nav class="navbar">
-    <a href="home.html">首页</a>
-    <a href="#">拼团</a>
-    <a href="#">赚币</a>
-    <a href="#">兑换</a>
-    <a href="mine.html">我的</a>
-</nav>
+<!-- 底部导航栏 -->
+<div id="bottom-nav" style="background-color:#ffffff;">
+    <button id="btn-home" onclick="navigatePage('home')"><span class="icon">🏠</span>首页</button>
+    <button id="btn-group" onclick="navigatePage('group')"><span class="icon">👥</span>拼团</button>
+    <button id="btn-earn" onclick="navigatePage('earn')"><span class="icon">💰</span>赚币</button>
+    <button id="btn-exchange" onclick="navigatePage('exchange')"><span class="icon">🔄</span>兑换</button>
+    <button id="btn-profile" onclick="navigatePage('profile')"><span class="icon">👤</span>我的</button>
+</div>
 
 <script src="script.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', async function(){
-    await checkLoginSecurity(); // 安全检测（新增）
-});
+navigatePage('home');
 </script>
 </body>
 </html>

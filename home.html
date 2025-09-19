@@ -1,25 +1,27 @@
-<!-- home.html - 版本号 1.26 -->
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>首页 - 钱包应用</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>首页</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="card">
-        <h3>首页</h3>
-        <p>欢迎回来，您已成功连接钱包。</p>
-    </div>
+<div id="alert-box"></div>
+<div id="content"></div>
 
-    <!-- 底部导航栏 -->
-    <div id="bottom-nav">
-        <button onclick="goPage('home.html')" class="active"><span class="icon">🏠</span>首页</button>
-        <button onclick="goPage('group.html')"><span class="icon">🤝</span>拼团</button>
-        <button onclick="goPage('earn.html')"><span class="icon">💰</span>赚币</button>
-        <button onclick="goPage('swap.html')"><span class="icon">🔄</span>兑换</button>
-        <button onclick="goPage('mine.html')"><span class="icon">👤</span>我的</button>
-    </div>
+<!-- 底部导航栏 -->
+<div id="bottom-nav" style="background-color:#ffffff;">
+    <button id="btn-home" onclick="navigatePage('home')"><span class="icon">🏠</span>首页</button>
+    <button id="btn-group" onclick="navigatePage('group')"><span class="icon">👥</span>拼团</button>
+    <button id="btn-earn" onclick="navigatePage('earn')"><span class="icon">💰</span>赚币</button>
+    <button id="btn-exchange" onclick="navigatePage('exchange')"><span class="icon">🔄</span>兑换</button>
+    <button id="btn-profile" onclick="navigatePage('profile')"><span class="icon">👤</span>我的</button>
+</div>
+
+<script src="script.js"></script>
+<script>
+navigatePage('home');
+</script>
 </body>
 </html>

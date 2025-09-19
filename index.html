@@ -1,27 +1,36 @@
-<!-- index.html - 版本号 1.26 -->
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>登录 - 钱包应用</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>登录 - 钱包应用</title>
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
 </head>
 <body>
-    <!-- 登录提示 -->
-    <div id="login-alert">请先连接 BSC 主网钱包地址</div>
 
-    <div class="container">
-        <h1>欢迎使用钱包应用</h1>
+<!-- 登录提示弹窗 -->
+<div id="login-alert">请先连接 BSC 主网钱包地址</div>
 
-        <div class="login-card">
-            <button onclick="connectWallet()">连接钱包</button>
-        </div>
+<div class="container">
+    <h1>欢迎使用钱包应用</h1>
 
-        <div class="login-card">
-            <label for="inviter">邀请人：</label>
-            <input type="text" id="inviter" placeholder="邀请人钱包地址" readonly>
-        </div>
+    <div class="login-card">
+        <button onclick="connectWallet()">连接钱包</button>
     </div>
+
+    <div class="login-card">
+        <label for="inviter">邀请人：</label>
+        <input type="text" id="inviter" placeholder="邀请人钱包地址" readonly>
+    </div>
+</div>
+
+<script>
+// 页面加载时自动显示登录提示
+document.addEventListener('DOMContentLoaded', function() {
+    showLoginAlert("请连接钱包进行登录");
+});
+</script>
+
 </body>
 </html>

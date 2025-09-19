@@ -1,193 +1,178 @@
-// script.js - 版本号 1.24 完整整合
-let currentPage = 'home';
-const LOGOUT_TIMEOUT = 3600*1000; // 1小时超时
-const BSC_CHAIN_ID = '0x38'; // BSC 主网链ID
-const pageBackgrounds = {
-    home:'linear-gradient(135deg, #f0f2f5, #cde0f7)',
-    group:'linear-gradient(135deg, #ffd194, #70e1f5)',
-    earn:'linear-gradient(135deg, #a8ff78, #78ffd6)',
-    exchange:'linear-gradient(135deg, #fbc2eb, #a6c1ee)',
-    profile:'linear-gradient(135deg, #f6d365, #fda085)'
-};
+/* script.js - 版本号 1.26 */
 
-// 钱包检测
-function isMetaMaskInstalled(){ return typeof window.ethereum!=='undefined'; }
-async function getCurrentWallet(){ if(!isMetaMaskInstalled()) return null; const accounts=await window.ethereum.request({method:'eth_accounts'}); return accounts[0]||null; }
-async function getCurrentChainId(){ if(!isMetaMaskInstalled()) return null; return await window.ethereum.request({method:'eth_chainId'}); }
+// 全局变量
+let currentAccount = null;
+let inactivityTimer = null;
+const INACTIVITY_LIMIT = 60 * 60 * 1000; // 1小时
+const BSC_MAINNET_CHAIN_ID = "0x38"; // BSC主网ID
 
-// 登录页逻辑
-document.addEventListener('DOMContentLoaded', function(){
-    const connectBtn = document.getElementById('connectBtn');
-    if(connectBtn){
-        connectBtn.addEventListener('click', async function(){
-            if(!isMetaMaskInstalled()){
-                alert('请先安装 MetaMask 钱包！');
+// 显示提示信息（登录页面专用，自动消失3秒）
+function showLoginAlert(message) {
+    const alertBox = document.getElementById("login-alert");
+    if (!alertBox) return;
+
+    alertBox.innerText = message;
+    alertBox.classList.add("show");
+
+    setTimeout(() => {
+        alertBox.classList.remove("show");
+        alertBox.classList.add("hide");
+        setTimeout(() => alertBox.classList.remove("hide"), 500);
+    }, 3000);
+}
+
+// 连接钱包
+async function connectWallet() {
+    if (!window.ethereum) {
+        showLoginAlert("请安装 MetaMask 钱包插件");
+        return;
+    }
+    try {
+        const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+        const chainId = await ethereum.request({ method: "eth_chainId" });
+
+        if (chainId !== BSC_MAINNET_CHAIN_ID) {
+            showLoginAlert("请切换到 BSC 主网");
+            await forceLogout();
+            return;
+        }
+
+        currentAccount = accounts[0];
+        localStorage.setItem("walletAddress", currentAccount);
+
+        // 自动填充邀请人
+        const inviter = localStorage.getItem("inviterAddress") || "";
+        const inviterInput = document.getElementById("inviter");
+        if (inviterInput && inviter) {
+            inviterInput.value = inviter;
+        }
+
+        window.location.href = "home.html";
+    } catch (err) {
+        console.error("连接钱包失败：", err);
+        showLoginAlert("连接失败，请重试");
+    }
+}
+
+// 确认关系
+function confirmRelation() {
+    const inviter = document.getElementById("confirm-inviter").value.trim();
+    if (!inviter) {
+        showLoginAlert("请输入邀请人钱包地址");
+        return;
+    }
+    localStorage.setItem("inviterAddress", inviter);
+    showLoginAlert("绑定成功");
+    setTimeout(() => {
+        window.location.href = "home.html";
+    }, 1000);
+}
+
+// 复制地址
+function copyAddress() {
+    const wallet = localStorage.getItem("walletAddress");
+    if (!wallet) {
+        showLoginAlert("未检测到钱包地址");
+        return;
+    }
+    navigator.clipboard.writeText(wallet).then(() => {
+        showLoginAlert("钱包地址已复制");
+    });
+}
+
+// 强制退出
+async function forceLogout() {
+    localStorage.removeItem("walletAddress");
+    localStorage.removeItem("inviterAddress");
+    currentAccount = null;
+    window.location.href = "index.html";
+}
+
+// 空闲检测
+function resetInactivityTimer() {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+        showLoginAlert("长时间未操作，请重新登录");
+        forceLogout();
+    }, INACTIVITY_LIMIT);
+}
+
+// 页面跳转
+function goPage(page) {
+    if (!localStorage.getItem("walletAddress")) {
+        showLoginAlert("请先登录");
+        forceLogout();
+        return;
+    }
+    window.location.href = page;
+}
+
+// 事件监听
+window.addEventListener("DOMContentLoaded", async () => {
+    const wallet = localStorage.getItem("walletAddress");
+    const inviter = localStorage.getItem("inviterAddress");
+
+    // 非登录页检查是否已登录
+    if (!location.pathname.endsWith("index.html")) {
+        if (!wallet) {
+            showLoginAlert("请先连接钱包");
+            forceLogout();
+            return;
+        }
+
+        try {
+            const chainId = await ethereum.request({ method: "eth_chainId" });
+            if (chainId !== BSC_MAINNET_CHAIN_ID) {
+                showLoginAlert("请切换到 BSC 主网");
+                await forceLogout();
                 return;
             }
-            connectBtn.innerText = '连接中...';
-            connectBtn.disabled = true;
-            try{
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                if(!accounts || accounts.length === 0){
-                    alert('未获取到钱包地址');
-                    connectBtn.innerText='连接钱包';
-                    connectBtn.disabled=false;
-                    return;
-                }
+        } catch (err) {
+            console.error("检查网络失败：", err);
+            showLoginAlert("网络检测失败");
+            await forceLogout();
+            return;
+        }
+    }
 
-                // 检测 BSC 主网
-                const chainId = await getCurrentChainId();
-                if(chainId !== BSC_CHAIN_ID){
-                    alert('请连接 BSC 主网');
-                    connectBtn.innerText='连接钱包';
-                    connectBtn.disabled=false;
-                    return;
-                }
-
-                localStorage.setItem('walletAddress', accounts[0]);
-                localStorage.setItem('loginTimestamp', Date.now());
-
-                const referrer = localStorage.getItem('referrerAddress') || '';
-                if(referrer) document.getElementById('referrerInput').value = referrer;
-
-                window.location.href='confirm.html';
-            }catch(err){
-                console.error(err);
-                alert('连接钱包失败，请重试');
-                connectBtn.innerText='连接钱包';
-                connectBtn.disabled=false;
+    // 监听钱包事件
+    if (window.ethereum) {
+        ethereum.on("accountsChanged", () => {
+            showLoginAlert("钱包切换，请重新登录");
+            forceLogout();
+        });
+        ethereum.on("chainChanged", (chainId) => {
+            if (chainId !== BSC_MAINNET_CHAIN_ID) {
+                showLoginAlert("请切换到 BSC 主网");
+                forceLogout();
             }
         });
     }
 
-    // 登录页不执行强制退出检查，受保护页才执行
-    const protectedPages = ['home.html','confirm.html'];
-    const currentPath = window.location.pathname.split('/').pop();
-    if(protectedPages.includes(currentPath)){
-        checkLoginSecurity();
+    // 防复制强制退出
+    document.addEventListener("copy", () => {
+        showLoginAlert("检测到复制，已退出登录");
+        forceLogout();
+    });
+
+    // 空闲检测
+    ["click", "mousemove", "keydown"].forEach(event =>
+        document.addEventListener(event, resetInactivityTimer)
+    );
+    resetInactivityTimer();
+
+    // 填充邀请人
+    const inviterInput = document.getElementById("inviter");
+    if (inviterInput && inviter) inviterInput.value = inviter;
+
+    // “我的”页面显示钱包和复制按钮
+    if (location.pathname.endsWith("mine.html")) {
+        const walletDiv = document.createElement("div");
+        walletDiv.className = "wallet-info";
+        walletDiv.innerHTML = `
+            <span>${wallet || "未登录"}</span>
+            <button class="copy-btn" onclick="copyAddress()">复制</button>
+        `;
+        document.body.appendChild(walletDiv);
     }
 });
-
-// 页面导航、复制、滑动、底部导航逻辑
-function navigatePage(page){
-    if(page===currentPage) return;
-    const contentEl = document.getElementById('content');
-    const oldPage = currentPage; currentPage=page;
-    document.querySelectorAll('#bottom-nav button').forEach(btn=>btn.classList.remove('active'));
-    const btnIdMap = {home:'btn-home',group:'btn-group',earn:'btn-earn',exchange:'btn-exchange',profile:'btn-profile'};
-    document.getElementById(btnIdMap[page]).classList.add('active');
-    document.body.style.background=pageBackgrounds[page]||'#f0f2f5';
-    const pagesOrder=['home','group','earn','exchange','profile'];
-    const direction=pagesOrder.indexOf(page)>pagesOrder.indexOf(oldPage)?'left':'right';
-
-    const newContent=document.createElement('div');
-    newContent.style.position='absolute'; newContent.style.width='100%'; newContent.style.top='0'; newContent.style.left='0';
-    newContent.style.padding='20px'; newContent.style.textAlign='center';
-
-    if(page==='home'){
-        newContent.innerHTML = `
-            <h2>首页</h2>
-            <div class="card"><span class="icon">🎉</span>欢迎回来！</div>
-            <div class="card"><span class="icon">📦</span>最新活动卡片</div>
-            <div class="card"><span class="icon">💡</span>推荐功能模块</div>
-        `;
-    }else if(page==='group'){
-        newContent.innerHTML = `
-            <h2>拼团页面</h2>
-            <div class="card"><h3>拼团商品A</h3><p>已参与人数: 3/5</p><div class="progress-bar"><div class="progress-bar-inner" style="width:60%"></div></div></div>
-            <div class="card"><h3>拼团商品B</h3><p>已参与人数: 1/4</p><div class="progress-bar"><div class="progress-bar-inner" style="width:25%"></div></div></div>
-        `;
-    }else if(page==='earn'){
-        newContent.innerHTML = `
-            <h2>赚币页面</h2>
-            <div class="card"><span class="icon">📝</span>每日签到 <button class="func-btn">赚10币</button></div>
-            <div class="card"><span class="icon">📤</span>邀请好友 <button class="func-btn">赚50币</button></div>
-        `;
-    }else if(page==='exchange'){
-        newContent.innerHTML = `
-            <h2>兑换页面</h2>
-            <div class="card"><span class="icon">🎁</span>兑换商品A <button class="func-btn">兑换</button></div>
-            <div class="card"><span class="icon">🎁</span>兑换商品B <button class="func-btn">兑换</button></div>
-        `;
-    }else if(page==='profile'){
-        const wallet=localStorage.getItem('walletAddress')||'未登录';
-        const referrer=localStorage.getItem('referrerAddress')||'未绑定';
-        newContent.innerHTML = `
-            <h2>我的页面</h2>
-            <div class="wallet-info"><span class="icon">💼</span>钱包地址: ${wallet} 
-                <button class="copy-btn" onclick="copyToClipboard('${wallet}')">复制</button>
-            </div>
-            <div class="wallet-info"><span class="icon">🎁</span>邀请人: ${referrer} 
-                <button class="copy-btn" onclick="copyToClipboard('${referrer}')">复制</button>
-            </div>
-        `;
-    }
-
-    newContent.classList.add(direction==='left'?'slide-in-left':'slide-in-right');
-    contentEl.classList.add(direction==='left'?'slide-out-left':'slide-out-right');
-    contentEl.parentNode.appendChild(newContent);
-    setTimeout(()=>{ contentEl.parentNode.removeChild(contentEl); newContent.id='content'; },400);
-}
-
-function copyToClipboard(text){
-    if(!text||text==='未登录'||text==='未绑定'){ alert('无可复制内容'); return; }
-    navigator.clipboard.writeText(text).then(()=>{ alert('已复制: '+text); }).catch(err=>{ alert('复制失败: '+err); });
-}
-
-// 受保护页安全检查
-async function checkLoginSecurity(){
-    const walletAddress = localStorage.getItem('walletAddress');
-    const loginTimestamp = parseInt(localStorage.getItem('loginTimestamp')||'0');
-    const currentChainId = await getCurrentChainId();
-
-    if(!walletAddress){
-        forceLogout('未检测到钱包登录，请先连接钱包');
-        return false;
-    }
-    if(currentChainId !== BSC_CHAIN_ID){
-        forceLogout('请连接 BSC 主网，已退出登录');
-        return false;
-    }
-    if(Date.now() - loginTimestamp > LOGOUT_TIMEOUT){
-        forceLogout('无操作超过1小时，已退出登录');
-        return false;
-    }
-    const currentWallet = await getCurrentWallet();
-    if(currentWallet !== walletAddress){
-        forceLogout('检测到钱包已切换，已退出登录');
-        return false;
-    }
-    return true;
-}
-
-function forceLogout(msg='检测到不安全操作，已退出登录，请重新连接钱包'){
-    showAlert(msg);
-    setTimeout(()=>{
-        localStorage.removeItem('walletAddress');
-        localStorage.removeItem('loginTimestamp');
-        localStorage.removeItem('referrerAddress');
-        window.location.href='index.html';
-    },1500);
-}
-
-function showAlert(msg){
-    let alertBox=document.getElementById('alert-box');
-    if(!alertBox){ alertBox=document.createElement('div'); alertBox.id='alert-box'; document.body.appendChild(alertBox); }
-    alertBox.innerText=msg; alertBox.classList.remove('hide'); alertBox.classList.add('show');
-    setTimeout(()=>{ alertBox.classList.remove('show'); alertBox.classList.add('hide'); },1500);
-}
-
-// 监听复制和操作事件
-document.addEventListener('copy',()=>{ forceLogout('检测到复制网页操作，已退出登录'); });
-document.addEventListener('mousemove',updateActivity);
-document.addEventListener('keydown',updateActivity);
-function updateActivity(){ localStorage.setItem('loginTimestamp',Date.now()); }
-
-// 定时检查安全（受保护页）
-setInterval(async ()=>{
-    const protectedPages = ['home.html','confirm.html'];
-    const currentPath = window.location.pathname.split('/').pop();
-    if(protectedPages.includes(currentPath)){
-        await checkLoginSecurity();
-    }
-},10000);

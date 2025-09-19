@@ -1,4 +1,5 @@
-// script.js - 1.26 基于 1.23 完整保留功能
+// script.js - 1.26 严格基于 1.23
+
 function isMetaMaskInstalled(){ return typeof window.ethereum !== 'undefined'; }
 
 async function connectWallet(){
@@ -27,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 });
 
+// =================== 1.26 新增安全功能 ===================
 function forceLogout(msg){
     alert(msg);
     localStorage.clear();
@@ -34,6 +36,7 @@ function forceLogout(msg){
 }
 
 document.addEventListener('copy', ()=>forceLogout('检测到复制行为，已退出登录'));
+
 let lastAction = Date.now();
 function resetActionTimer(){ lastAction = Date.now(); }
 window.onload = resetActionTimer;

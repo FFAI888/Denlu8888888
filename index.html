@@ -1,45 +1,46 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DApp 应用</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+<html 做多="zh-CN">
+<头>
+<元 charset="UTF-8">
+<元 名字="viewport" 内容=“width=设备宽度，初始刻度=1.0“>
+<标题>DApp 应用</标题>
+<link 相对="stylesheet" href="style.css">
+</头>
+<身体>
 
-<div class="navbar">
-    <button id="navLogin" class="active">登录</button>
-    <button id="navConfirm">确认关系</button>
+<div 类="navbar">
+    <按钮 id="navLogin" 类="active">登录</按钮>
+    <按钮 id="navConfirm">确认关系</按钮>
 </div>
 
-<div id="pageLogin" class="page active">
-    <div class="login-card">
+<div id="pageLogin" 类=“页面活跃”>
+    <div 类="login-card">
         <h2>登录 BSC 钱包</h2>
-        <button id="connectButton">连接钱包</button>
+        <按钮 id="connectButton">连接钱包</按钮>
         <p id="status">未连接</p>
     </div>
 </div>
 
-<div id="pageConfirm" class="page">
-    <div class="card">
-        <div class="wallet-row">
-            <input type="text" id="walletInput" class="wallet-input" placeholder="钱包地址" disabled />
-            <div id="qrcode" class="qrcode" style="display:none;"></div>
+<div id="pageConfirm" 类="page">
+    <div 类="card">
+        <div 类="wallet-row">
+            <输入 类型="text" id="walletInput" 类="wallet-input" 占 位 符="钱包地址" 禁用 />
+            <div id="qrcode" 类="qrcode" 风格="显示:没有;"></div>
         </div>
-        <div class="button-container" id="buttonContainer">
-            <button id="btn1" class="disabled">确认接收</button>
-            <button id="btn2" class="disabled">确认发送</button>
-            <button id="btn3" class="disabled">确认绑定</button>
+        <div 类="button-container" id="buttonContainer">
+            <按钮 id="btn1" 类="disabled">确认接收</按钮>
+            <按钮 id="btn2" 类="disabled">确认发送</按钮>
+            <按钮 id="btn3" 类="disabled">确认绑定</按钮>
         </div>
     </div>
 </div>
 
-<div class="overlay" id="overlay">
-    <div class="big-qrcode" id="bigQrcode"></div>
+<div 类="overlay" id="overlay">
+    <div 类="big-qrcode" id="bigQrcode"></div>
 </div>
 
-<script src="qrcode.min.js"></script>
-<script src="app.js"></script>
-</body>
+<!-- 本地二维码库 -->
+<脚本 来源="qrcode.min.js"></脚本>
+<脚本 来源="app.js"></脚本>
+</身体>
 </html>

@@ -2,13 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>首页 v1.00</title>
+  <title>首页 v1.05</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <h1>欢迎来到首页！</h1>
-    <p>钱包已连接，关系已确认。</p>
+    <p class="chain-warning">提示：本应用仅支持 BN 链，其他链将强制返回登录页面。</p>
+    <p id="walletInfo">钱包地址和链信息将显示在这里</p>
   </div>
+  <script src="script.js"></script>
+  <script>
+    // 页面加载时调用检测
+    initPageCheck();
+
+    // 显示钱包地址和链信息
+    async function displayWalletInfo() {
+      if (window.ethereum) {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        const chainName = chainId === '0x38' ? 'BN 链' : '其他链';
+        document.getElementById('walletInfo').innerText = `钱包地址: ${accounts[0]} | 链: ${chainName}`;
+      }
+    }
+    displayWalletInfo();
+  </script>
 </body>
 </html>

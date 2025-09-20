@@ -1,3 +1,4 @@
+// 版本号 v1.06
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ethers } from "ethers";
@@ -7,7 +8,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { walletAddress, setWalletAddress, isVerified, setIsVerified } = useContext(WalletContext);
 
-  // WebAuthn 验证
   const webAuthnVerify = async () => {
     try {
       const publicKey = {

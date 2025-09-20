@@ -1,74 +1,26 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>登录页面 v1.11</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多钱包登录页面</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>连接钱包登录</h1>
-    <p>请使用 MetaMask 钱包连接本网站。</p>
-    <p>注意：</p>
-    <ul class="login-tips">
-      <li>本应用仅支持 Binance Smart Chain (BN 链)，其他链无法使用。</li>
-      <li>请确保钱包已安装并已登录账户。</li>
-      <li>请不要直接复制链接绕过登录页面，否则无法使用功能。</li>
-      <li>连接钱包后，会自动跳转到确认关系页面进行操作。</li>
-    </ul>
-    <button id="connectWalletBtn">连接钱包</button>
-  </div>
-
-  <!-- 弹窗容器 -->
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <h2 id="modal-title">提示</h2>
-      <p id="modal-message">这里显示提示内容</p>
-      <button id="modal-ok">确定</button>
+    <div class="container">
+        <h1>欢迎登录 Dapp</h1>
+        <button id="connectWalletBtn">
+            <span class="btn-text">连接钱包</span>
+            <span class="spinner"></span>
+        </button>
+        <p id="walletAddress">钱包未连接</p>
+        <p id="networkWarning" class="warning"></p>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
-  <script src="script.js"></script>
-  <script>
-    const connectWalletBtn = document.getElementById('connectWalletBtn');
-
-    // 显示 APP 风格弹窗
-    function showModal(title, message, callback) {
-      const modal = document.getElementById('modal');
-      document.getElementById('modal-title').innerText = title;
-      document.getElementById('modal-message').innerText = message;
-      modal.style.display = 'flex';
-
-      const okBtn = document.getElementById('modal-ok');
-      okBtn.onclick = () => {
-        modal.style.display = 'none';
-        if (callback) callback();
-      };
-    }
-
-    // 登录按钮点击
-    connectWalletBtn.addEventListener('click', async () => {
-      if (!window.ethereum) {
-        showModal('钱包未安装', '未检测到 MetaMask 钱包，请安装并登录！');
-        return;
-      }
-
-      showModal('提示', '请确认 MetaMask 钱包已打开，并连接到 BN 链后点击确定！', async () => {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const chainId = await getChainId();
-          if (chainId !== BSC_CHAIN_ID_DEC) {
-            showModal('链错误', '请切换到 Binance Smart Chain (BN 链)！');
-            return;
-          }
-          sessionStorage.setItem('walletConnected', 'true');
-          window.location.href = 'confirm.html';
-        } catch (error) {
-          showModal('连接失败', '钱包连接失败，请重试！');
-        }
-      });
-    });
-  </script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.7.8/dist/umd/index.min.js"></script>
+    <script src="app.js"></script>
+    <!-- 页面版本号显示 -->
+    <div class="version">版本号 v0.03</div>
 </body>
 </html>

@@ -1,3 +1,4 @@
+// 版本号 v1.06
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { WalletContext } from "../context/WalletContext";

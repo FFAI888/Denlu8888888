@@ -1,5 +1,6 @@
+// 版本号 v1.06
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import ConfirmPage from "./pages/ConfirmPage";
 import HomePage from "./pages/HomePage";

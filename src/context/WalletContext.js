@@ -1,3 +1,4 @@
+// 版本号 v1.06
 import React, { createContext, useState } from "react";
 
 export const WalletContext = createContext();
